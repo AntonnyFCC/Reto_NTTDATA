@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto NTTDATA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        #load_btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        #load_btn:hover {
+            background-color: #0056b3;
+        }
+        
+        #load_btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Los datos se llamn de la API localhost:3000/personas</h1>
+    
+    <button id="load_btn" onclick="loadData()">Cargar Datos</button>
+    
+    <table id="data_table" style="display: none;">
+        <thead>
+            <tr>
+                <th>Fotografía</th>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Ubicación</th>
+                <th>Correo Electrónico</th>
+                <th>Fecha de Nacimiento</th>
+            </tr>
+        </thead>
+        <tbody id="table_body">
+        </tbody>
+    </table>
+    
+    <div id="loading" class="loading" style="display: none;">Cargando datos...</div>
+
+    <script>
+        async function loadData() {
+            const btn = document.getElementById('load_btn');
+            const table = document.getElementById('data_table');
+            const table_body = document.getElementById('table_body');
+            const loading = document.getElementById('loading');
+            
+            // Mostrar estado de carga
+            btn.disabled = true;
+            btn.textContent = 'Cargando...';
+            loading.style.display = 'block';
+            table.style.display = 'none';
+            
+            try {
+                // Hacer la solicitud a la API 
+                const response = await fetch('http://localhost:3000/personas');
+                const data = await response.json();
+                
+                table_body.innerHTML = ''; // Limpiar tabla
+                
+                // Llenar tabla con todos los datos
+                data.listPersonas.forEach(persona => {
+                    const row = table_body.insertRow();
+                    
+                    // Foto
+                    const imgCell = row.insertCell(0);
+                    const img = document.createElement('img');
+                    img.src = persona.picture.medium;
+                    img.alt = 'Foto de perfil';
+                    img.className = 'profile-img';
+                    imgCell.appendChild(img);
+                    
+                    // Nombre completo
+                    const nombreCompleto = `${persona.name.title} ${persona.name.first} ${persona.name.last}`;
+                    row.insertCell(1).textContent = nombreCompleto;
+                    
+                    // Género
+                    const genero = persona.gender === 'male' ? 'Masculino' : 'Femenino';
+                    row.insertCell(2).textContent = genero;
+                    
+                    // Ubicación
+                    const ubicacion = `${persona.location.city}, ${persona.location.state}, ${persona.location.country}`;
+                    row.insertCell(3).textContent = ubicacion;
+                    
+                    // Correo
+                    row.insertCell(4).textContent = persona.email;
+                    
+                    // Fecha de nacimiento
+                    const fecha_nacimiento = new Date(persona.dob.date).toLocaleDateString('es-ES');
+                    row.insertCell(5).textContent = fecha_nacimiento;
+                });
+                
+                // Mostrar tabla
+                table.style.display = 'table';
+                
+            } catch (error) {
+                // mAnejar error 
+                alert('Error al cargar los datos: ' + error.message);
+            } finally {
+                // Restaurar boton
+                btn.disabled = false;
+                btn.textContent = 'Cargar Datos';
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

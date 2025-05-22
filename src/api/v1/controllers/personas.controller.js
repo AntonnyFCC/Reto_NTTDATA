@@ -12,7 +12,6 @@ const personas = async (_, res) => {
 
     // Convertir la respuesta a JSON
     const data = await response.json();
-    console.log("La respuesta esta:", data);
 
     // Enviar la respuesta al cliente en una lista
     res.code(200).send({ listPersonas: data.results });
