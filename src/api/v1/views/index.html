@@ -7,8 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
             padding: 20px;
         }
         
@@ -100,9 +98,9 @@
                 const response = await fetch('http://localhost:3000/personas');
                 const data = await response.json();
                 
-                table_body.innerHTML = ''; // Limpiar tabla
+                table_body.innerHTML = ''; // Limpiar tabla para que nos se acumule
                 
-                // Llenar tabla con todos los datos
+                // Llenar tabla con todos los datos de la lista
                 data.listPersonas.forEach(persona => {
                     const row = table_body.insertRow();
                     
