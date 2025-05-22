@@ -1,0 +1,13 @@
+{
+  "name": "reto_tecnico_antonny_corcino",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js",
+    "start": "node ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
